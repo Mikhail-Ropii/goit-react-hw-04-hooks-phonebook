@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { nanoid } from 'nanoid';
 import { Container, Title, ContcTitle, Section } from './Phonebook.styled';
 import { ContactForm } from './contactForm/ContactForm';
@@ -14,6 +14,7 @@ export function App() {
     { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
   ]);
   const [filter, setFilter] = useState('');
+  const noSetLocalStorage = useRef(true);
 
   useEffect(() => {
     const savesContacts = JSON.parse(localStorage.getItem(LS_KEY));
@@ -23,6 +24,10 @@ export function App() {
   }, []);
 
   useEffect(() => {
+    if (noSetLocalStorage.current) {
+      noSetLocalStorage.current = false;
+      return;
+    }
     localStorage.setItem(LS_KEY, JSON.stringify(contacts));
     console.log(localStorage.getItem(LS_KEY));
   }, [contacts]);
